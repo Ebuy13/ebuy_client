@@ -48,15 +48,7 @@ const App = () => {
     <Route exact path = "/Productupload">
       <ProductUploadPage/>
     </Route>
-
-    
-
-    
-
-    
     </>
-
-    
   )
   }
 export default App

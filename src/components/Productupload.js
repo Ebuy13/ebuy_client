@@ -2,8 +2,26 @@ import React, { useState } from 'react';
 import './Productupload.css';
 import signinimage from '../Wavy_Ppl-05_Single-09.jpg';
 
+function generateItemID() {
+  // Generate a random two-letter string
+  var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var randomLetters = '';
+  for (var i = 0; i < 2; i++) {
+    randomLetters += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+
+  // Generate a random four-digit number
+  var randomNumber = Math.floor(Math.random() * 10000);
+  var paddedNumber = randomNumber.toString().padStart(4, '0');
+
+  // Combine the two to form the itemID
+  var itemID = randomLetters + paddedNumber;
+
+  return itemID;
+}
+
 function ProductUploadPage() {
-  const [title, setTitle] = useState('');
+  const [productName, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
@@ -40,17 +58,47 @@ function ProductUploadPage() {
     setAvailability(event.target.value);
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // code to upload the product data to the server goes here
-    //const sellerID = 
+    const sellerID = '1234567890';
+    var itemID = generateItemID();
+    const brandName = 'temp';
+    const sellingStatus = 'Available'
+    const specs = description
+    const contactNo = '1234567890'
+    const yearsUsed = 2
+    const relevanceScore = 1
+    const productData = { 
+      itemID, 
+      sellerID, 
+      productName, 
+      brandName, 
+      price, 
+      sellingStatus,
+      specs,
+      contactNo,
+      category,
+      yearsUsed,
+      relevanceScore
+    };
+    const response = await fetch('/api/Product', {
+      method: 'POST',
+      body: JSON.stringify(productData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if (response) {
+      window.alert('Product uploaded successfully')
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
         Title:
-        <input type="text" value={title} onChange={handleTitleChange} />
+        <input type="text" value={productName} onChange={handleTitleChange} />
       </label>
       <br />
       <label>
@@ -98,15 +146,15 @@ function ProductUploadPage() {
       <br />
       <button type="submit">Upload Product</button>
       <div className="image-container" >
-						<img
-							src={signinimage}
-							className="img-fluid"
-							alt="Welcome to our eCommerce store!" />
-						
-					</div>
+        <img
+          src={signinimage}
+          className="img-fluid"
+          alt="Welcome to our eCommerce store!" />
+
+      </div>
     </form>
-    
-    
+
+
   );
 }
 
